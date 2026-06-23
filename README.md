@@ -28,4 +28,3 @@ Para ingresar a la aplicación y comenzar a explorar, utiliza las siguientes cre
 ## 💻 Integrantes
 * Díaz Matias
 * Somma Santiago
-*
