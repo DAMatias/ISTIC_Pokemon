@@ -42,7 +42,11 @@ class PokemonAdapter(
 
             binding.pokemonName.text = pokemon.name.replaceFirstChar { it.uppercase() }
 
-            binding.tvPokemonType.text = "Tipo: Desconocido"
+            if (pokemon.typesStr.isNotEmpty()) {
+                binding.tvPokemonType.text = "Tipos: ${pokemon.typesStr}"
+            } else {
+                binding.tvPokemonType.text = "Cargando tipos..."
+            }
 
             val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${getPokemonId(pokemon.url)}.png"
             Glide.with(binding.root.context)
