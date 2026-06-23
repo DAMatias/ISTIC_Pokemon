@@ -21,12 +21,12 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //Verificar sesión dentro de corrutina
+        // ✅ CORREGIDO: Verificar sesión dentro de corrutina
         lifecycleScope.launch {
             loginViewModel.checkSession()
         }
 
-        //Observar estado del login
+        // Observar estado del login
         loginViewModel.loginState.observe(this) { state ->
             when (state) {
                 is LoginViewModel.LoginState.Loading -> {
@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
                 is LoginViewModel.LoginState.Error -> {
                     binding.progressBarLogin.visibility = View.GONE
                     binding.btnLogin.isEnabled = true
-                    Toast.makeText(this@LoginActivity, state.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
                 is LoginViewModel.LoginState.SessionActive -> {
                     navigateToMainMenu()
@@ -53,14 +53,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        //Configurar botón de login
+        // Configurar botón de login
         binding.btnLogin.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
             val rememberSession = binding.cbRemember.isChecked
 
             if (validateFields(username, password)) {
-                //Login dentro de corrutina
+                // ✅ CORREGIDO: Login dentro de corrutina
                 lifecycleScope.launch {
                     loginViewModel.login(username, password, rememberSession)
                 }

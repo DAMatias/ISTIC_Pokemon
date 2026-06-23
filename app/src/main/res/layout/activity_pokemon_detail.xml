@@ -204,7 +204,6 @@
             android:text="Agregar a Favoritos"
             android:textAllCaps="false"
             app:cornerRadius="8dp"
-            app:icon="@drawable/ic_favorite"
             android:layout_marginTop="8dp" />
 
     </LinearLayout>

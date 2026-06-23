@@ -82,7 +82,6 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_menu_arrow_forward"
                 android:layout_gravity="center" />
 
         </LinearLayout>
@@ -140,7 +139,6 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_menu_arrow_forward"
                 android:layout_gravity="center" />
 
         </LinearLayout>
