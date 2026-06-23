@@ -9,12 +9,14 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class AuthRepository(private val context: Context) {
+// Es una propiedad de extensión que se instancia una sola vez para toda la app.
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth")
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("auth")
+class AuthRepository(private val context: Context) {
+    private val dataStore = context.dataStore
 
     suspend fun saveUserSession(username: String, rememberSession: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[USERNAME_KEY] = username
             preferences[SESSION_ACTIVE_KEY] = if (rememberSession) "true" else "false"
             if (rememberSession) {
@@ -24,19 +26,19 @@ class AuthRepository(private val context: Context) {
     }
 
     suspend fun isLoggedIn(): Boolean {
-        return context.dataStore.data.map { preferences ->
+        return dataStore.data.map { preferences ->
             preferences[SESSION_ACTIVE_KEY] == "true"
         }.first()
     }
 
     suspend fun getUsername(): String? {
-        return context.dataStore.data.map { preferences ->
+        return dataStore.data.map { preferences ->
             preferences[USERNAME_KEY]
         }.first()
     }
 
     suspend fun clearSession() {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences.remove(USERNAME_KEY)
             preferences.remove(SESSION_ACTIVE_KEY)
             preferences.remove(REMEMBER_SESSION_KEY)

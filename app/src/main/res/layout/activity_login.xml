@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="@android:color/holo_purple">
 
     <ImageView
         android:layout_width="120dp"
