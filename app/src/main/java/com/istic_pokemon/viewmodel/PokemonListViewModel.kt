@@ -9,6 +9,8 @@ import com.istic_pokemon.repository.PokemonRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class PokemonListViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,22 +21,28 @@ class PokemonListViewModel(application: Application) : AndroidViewModel(applicat
     private val _pokemonListState = MutableLiveData<PokemonListState>()
     val pokemonListState: LiveData<PokemonListState> = _pokemonListState
 
-    fun loadPokemons() { // Cambié a función normal, lanzamos corrutina acá
+    fun loadPokemons() {
         _pokemonListState.value = PokemonListState.Loading
+
         viewModelScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
-                    repository.getPokemons()
+                //Llama a la lista básica
+                val pokemonsBasicos = withContext(Dispatchers.IO) { repository.getPokemons() }
+
+                //Hacemos todas las peticiones de detalle en paralelo
+                val updatedPokemons = withContext(Dispatchers.IO) {
+                    pokemonsBasicos.map { pokemon ->
+                        async {
+                            val detail = repository.getPokemonDetail(pokemon.name)
+                            pokemon.typesStr = detail.types.joinToString(", ") {
+                                it.type.name.replaceFirstChar { char -> char.uppercase() }
+                            }
+                            pokemon
+                        }
+                    }.awaitAll() //Esperamos a que todas las tareas paralelas terminen
                 }
 
-                // Mapeamos los Pokémon para cargar sus tipos
-                val updatedPokemons = result.map { pokemon ->
-                    val detail = repository.getPokemonDetail(pokemon.name) // Llamada extra
-                    // Unimos los tipos con coma
-                    pokemon.typesStr = detail.types.joinToString(", ") { it.type.name }
-                    pokemon
-                }
-
+                //Cuando terminan, actualizamos el estado
                 allPokemons = updatedPokemons
                 _pokemonListState.value = PokemonListState.Success(allPokemons)
 
@@ -44,7 +52,7 @@ class PokemonListViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    suspend fun searchPokemons(query: String) {
+    fun searchPokemons(query: String) {
         if (query.isEmpty()) {
             if (allPokemons.isNotEmpty()) {
                 _pokemonListState.postValue(PokemonListState.Success(allPokemons))

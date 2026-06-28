@@ -58,8 +58,6 @@ class PokemonListActivity : AppCompatActivity() {
 
         // Configurar búsqueda
         setupSearch()
-
-        // ✅ CORREGIDO: Cargar datos iniciales dentro de una corrutina
         lifecycleScope.launch {
             viewModel.loadPokemons()
         }
@@ -81,7 +79,6 @@ class PokemonListActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // ✅ CORREGIDO: Búsqueda dentro de corrutina
                 lifecycleScope.launch {
                     viewModel.searchPokemons(s?.toString()?.trim() ?: "")
                 }

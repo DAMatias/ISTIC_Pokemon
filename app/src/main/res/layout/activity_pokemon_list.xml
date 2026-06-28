@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/holo_purple">
+    android:background="@android:color/white">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -28,6 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:endIconMode="clear_text"
+        android:textColorHint="#000000"
+        app:boxStrokeColor="@android:color/black"
+        app:hintTextColor="@android:color/black"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -36,6 +39,7 @@
             android:layout_height="wrap_content"
             android:hint="Buscar Pokémon..."
             android:inputType="text"
+            android:textColor="@color/black"
             android:maxLines="1"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp" />
